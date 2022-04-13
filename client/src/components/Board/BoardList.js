@@ -1,6 +1,4 @@
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import BoardCreate from './BoardCreate';
 
 function BoardList({ currentPosts }) {
 	return (
@@ -10,8 +8,8 @@ function BoardList({ currentPosts }) {
 					<div className="listItem" key={item.id}>
 						<Link to={`/board/read/${item.id}`}>
 							<div className="title">{item.title}</div>
-							<div className="name">{item.name}</div>
-							<div className="createAt">{item.insertDate}</div>
+							<div className="name">{item.title}</div>
+							<div className="createAt">{item.createdAt.slice(0, 10)}</div>
 						</Link>
 					</div>
 				);
@@ -20,7 +18,4 @@ function BoardList({ currentPosts }) {
 	);
 }
 
-BoardList.propTypes = {
-	currentPosts: PropTypes.node.isRequired,
-};
 export default BoardList;

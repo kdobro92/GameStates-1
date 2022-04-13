@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
@@ -56,6 +57,9 @@ function MypageModal({ accessToken }) {
 	// 유저정보 수정 후 서버에 확인 버튼 클릭시 요청
 	const saveEditUserInfo = () => {
 		// const { editData } = { data: { password, nickname } };
+		// if (!nickname || !password) {
+		// 	navigate('/mypagemodal');
+		// }
 		axios
 			.patch(
 				'http://localhost:4000/user/modifyUserInfo',

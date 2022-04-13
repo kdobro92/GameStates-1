@@ -117,7 +117,7 @@ function App() {
 					element={<Mypage userInfo={userInfo} accessToken={accessToken} />}
 				/>
 				<Route path="/signup" element={<Signup />} />
-				<Route path="/board" element={<Board />} />
+				<Route path="/board" element={<Board accessToken={accessToken} />} />
 				<Route
 					path="/mypagemodal"
 					element={<MypageModal accessToken={accessToken} />}
@@ -126,8 +126,22 @@ function App() {
 			</Routes>
 			<Routes>
 				<Route path="/board/List" element={<BoardList />} />
-				<Route path="/board/create" element={<BoardCreate />} />
-				<Route path="/board/read/:id" element={<BoardRead />} />
+				<Route
+					path="/board/create"
+					element={<BoardCreate accessToken={accessToken} />}
+				/>
+				<Route
+					path="/board/create/:id"
+					element={<BoardCreate accessToken={accessToken} />}
+				/>
+				<Route
+					path="/board/modify/:id"
+					element={<BoardCreate accessToken={accessToken} />}
+				/>
+				<Route
+					path="/board/read/:id"
+					element={<BoardRead accessToken={accessToken} isLogin={isLogin} />}
+				/>
 			</Routes>
 			<Footer />
 		</div>

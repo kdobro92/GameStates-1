@@ -4,21 +4,21 @@ import axios from 'axios';
 import BoardComment from './BoardComment';
 import BoardSidebar from './BoardSidebar';
 
-function BoardRead() {
+function BoardRead({ accessToken, isLogin }) {
 	const [read, setRead] = useState([]);
 	const { id } = useParams();
 	const navigate = useNavigate();
+	const [posts, setPosts] = useState([]);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const response = await axios({
 					method: 'get',
-					url: `http://localhost:4003/articles/${id}`,
-					baseURL: 'http://localhost:4003/articles',
-					timeout: 2000,
+					url: `http://localhost:4000/board/${id}`,
+					baseURL: 'http://localhost:4000/board/',
 				});
-				setRead(response.data);
+				setRead(response.data.isCreated);
 			} catch (error) {
 				console.error(error);
 			}
@@ -27,22 +27,30 @@ function BoardRead() {
 		fetchData();
 	}, []);
 
-	const [posts, setPosts] = useState([]);
-
-	const getBoardList = async () => {
-		await axios
-			.get(`http://localhost:4003/articles`)
-			.then((res) => setPosts(res.data));
-	};
-
-	useEffect(() => {
-		getBoardList();
-	}, []);
-
 	const del = () => {
 		axios
-			.delete(`http://localhost:4003/articles/${id}`)
+			.delete(`http://localhost:4000/board/${id}`, {
+				headers: { authorization: `Bearer ${accessToken}` },
+				withCredentials: true,
+			})
 			.then(() => alert('게시판 삭제가 완료 되었습니다'))
+			.then(() => navigate('/board'));
+	};
+
+	const modify = () => {
+		axios
+			.patch(
+				`http://localhost:4000/create/${id}`,
+				{
+					title: 'hi',
+					description: 'hi',
+				},
+				{
+					headers: { authorization: `Bearer ${accessToken}` },
+					withCredentials: true,
+				},
+			)
+			.then(() => alert('수정이 완료 되었습니다'))
 			.then(() => navigate('/board'));
 	};
 
@@ -50,10 +58,7 @@ function BoardRead() {
 	const [postsPerPage] = useState(10);
 	const indexOfLastPost = currentPage * postsPerPage;
 	const indexOfFirstPost = indexOfLastPost - postsPerPage;
-	const currentPosts = posts
-		.sort((a, b) => b.id - a.id)
-		.slice(indexOfFirstPost, indexOfLastPost);
-	const paginate = (pageNumber) => setCurrentPage(pageNumber);
+	const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
 	// 검색 구현
 	const [search, setSearch] = useState('');
@@ -73,7 +78,6 @@ function BoardRead() {
 			setPosts(filterData);
 		}
 	};
-	console.log(posts);
 
 	return (
 		<div className="wrap">
@@ -104,27 +108,33 @@ function BoardRead() {
 							<div className="boardHeader">
 								<div className="boardReadTitle">{read.title}</div>
 								<div className="boardReadTitleSub">
-									<div className="boardName">{read.name}</div>
-									<div className="createdAt">{read.insertDate}</div>
+									<div className="boardName">{read.title}</div>
+									<div className="createdAt">{read.createdAt}</div>
 								</div>
-								<div className="boardReadTitleBtn">
-									<button type="button" onClick={del} className="delButton">
-										삭제
-									</button>
-									<button type="button" onClick={del} className="putButton">
-										수정
-									</button>
-								</div>
+								{id ? (
+									<div className="boardReadTitleBtn">
+										<button type="button" onClick={del} className="delButton">
+											삭제
+										</button>
+										<Link to={`/board/modify/${id}`}>
+											<button type="button" className="putButton">
+												수정
+											</button>
+										</Link>
+									</div>
+								) : null}
 							</div>
-							<div className="boardReadContent">{read.content}</div>
+							<div className="boardReadContent">{read.description}</div>
 							<BoardComment currentPosts={currentPosts} />
 						</div>
 					</div>
 				</div>
 				<div className="bottomBtm">
-					<button type="button" className="writeButton">
-						<Link to="/board/create">글쓰기</Link>
-					</button>
+					{isLogin ? (
+						<button type="button" className="writeButton">
+							<Link to="/board/create">글쓰기</Link>
+						</button>
+					) : null}
 				</div>
 			</div>
 		</div>
