@@ -71,7 +71,7 @@ module.exports = {
       if (Number(validate) !== random.number) {
         return res.json({ message: "Fail" });
       }
-      const USER = await user.findOne({ where: { email } });
+      const USER = await user.findOne({ where: { email, nickname } });
       // 비밀번호 암호화하기
       const hashed = await bcrypt.hash(password, 10);
 

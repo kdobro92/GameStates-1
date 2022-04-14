@@ -1,7 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { FaBars } from 'react-icons/fa';
 import { HiOutlineX } from 'react-icons/hi';
-import { IoPersonSharp } from 'react-icons/io5';
 import { useState } from 'react';
 
 function Header({ isLogin, handleLogout }) {
@@ -24,9 +23,7 @@ function Header({ isLogin, handleLogout }) {
 							<NavLink to="/board">Board</NavLink>
 						</li>
 						<li>
-							<NavLink to="/Mypage">
-								<IoPersonSharp />
-							</NavLink>
+							<NavLink to="/Mypage">Mypage</NavLink>
 						</li>
 						<li>
 							<NavLink to="/" onClick={() => handleLogout()}>
